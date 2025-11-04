@@ -1,32 +1,30 @@
-// Telas
+// 📌 Elementos principais
 const telaInicial = document.getElementById('tela-inicial');
 const telaLembretes = document.getElementById('tela-lembretes');
 const telaContas = document.getElementById('tela-contas');
 
-// Botões voltar
-const voltarLembretes = document.getElementById('voltar-inicial-lembretes');
-const voltarContas = document.getElementById('voltar-inicial-contas');
-
-function abrirTela(tela) {
+// 📌 Abrir tela escolhida
+function abrirTela(telaEscolhida){
     telaInicial.style.display = 'none';
     telaLembretes.style.display = 'none';
     telaContas.style.display = 'none';
-    tela.style.display = 'block';
+    telaEscolhida.style.display = 'block';
 }
 
-// Menu inicial
+// Botões de menu inicial
 document.getElementById('opcao-lembretes').addEventListener('click', () => abrirTela(telaLembretes));
 document.getElementById('opcao-contas').addEventListener('click', () => abrirTela(telaContas));
 
-// Voltar
-voltarLembretes.addEventListener('click', () => abrirTela(telaInicial));
-voltarContas.addEventListener('click', () => abrirTela(telaInicial));
+// Botões de voltar ao menu inicial
+document.getElementById('voltar-inicial-lembretes').addEventListener('click', () => abrirTela(telaInicial));
+document.getElementById('voltar-inicial-contas').addEventListener('click', () => abrirTela(telaInicial));
 
-/* ================== LEMBRETES ================== */
+// ===================== LEMBRETES =====================
 const listaLembretes = document.getElementById('lista-lembretes');
 const formLembrete = document.getElementById('form-lembrete');
 const filtroMesLembretes = document.getElementById('filtro-mes-lembretes');
 
+// Abrir / fechar formulário
 document.getElementById('btn-adicionar-lembrete').addEventListener('click', () => formLembrete.classList.remove('form-hidden'));
 document.getElementById('cancelar-lembrete').addEventListener('click', () => formLembrete.classList.add('form-hidden'));
 
@@ -35,42 +33,44 @@ document.getElementById('salvar-lembrete').addEventListener('click', () => {
     const titulo = document.getElementById('titulo-lembrete').value.trim();
     const desc = document.getElementById('descricao-lembrete').value.trim();
     const data = document.getElementById('data-lembrete').value;
-    const prioridade = document.getElementById('prioridade-lembrete').value;
     if(titulo && desc && data){
         const li = document.createElement('li');
-        li.dataset.data = data;
-        li.dataset.prioridade = prioridade;
-        li.textContent = `${titulo} - ${desc} - ${data} - ${prioridade}`;
+        li.textContent = `${titulo} - ${desc} - ${data}`;
+        li.dataset.data = data; // para filtro
         li.classList.add('slide-in');
         listaLembretes.appendChild(li);
         formLembrete.classList.add('form-hidden');
         document.getElementById('titulo-lembrete').value = '';
         document.getElementById('descricao-lembrete').value = '';
         document.getElementById('data-lembrete').value = '';
-        document.getElementById('prioridade-lembrete').value = 'normal';
         salvarNoStorage();
         enviarNotificacao("📋 Novo lembrete", `${titulo} - ${desc}`);
-        filtrarLembretes();
+        aplicarFiltroLembretes();
     }
 });
 
-// Filtro por mês
-filtroMesLembretes.addEventListener('change', filtrarLembretes);
-function filtrarLembretes(){
-    const mes = filtroMesLembretes.value;
+// Filtrar lembretes por mês
+filtroMesLembretes.addEventListener('change', aplicarFiltroLembretes);
+function aplicarFiltroLembretes(){
+    const mesSelecionado = filtroMesLembretes.value; // YYYY-MM
     Array.from(listaLembretes.children).forEach(li => {
-        li.style.display = li.dataset.data.startsWith(mes) ? 'flex' : 'none';
+        if(!mesSelecionado || li.dataset.data.startsWith(mesSelecionado)){
+            li.style.display = 'flex';
+        } else {
+            li.style.display = 'none';
+        }
     });
 }
 
-/* ================== CONTAS ================== */
+// ===================== CONTAS =====================
 const listaContas = document.getElementById('lista-contas');
 const formConta = document.getElementById('form-conta');
+const filtroMesContas = document.getElementById('filtro-mes-contas');
 const totalGasto = document.getElementById('total-gasto');
 const totalPago = document.getElementById('total-pago');
 const totalPendente = document.getElementById('total-pendente');
-const filtroMesContas = document.getElementById('filtro-mes-contas');
 
+// Abrir / fechar formulário
 document.getElementById('btn-adicionar-conta').addEventListener('click', () => formConta.classList.remove('form-hidden'));
 document.getElementById('cancelar-conta').addEventListener('click', () => formConta.classList.add('form-hidden'));
 
@@ -82,12 +82,12 @@ document.getElementById('salvar-conta').addEventListener('click', () => {
     const vencimento = document.getElementById('vencimento-conta').value;
     if(nome && valor && vencimento){
         const li = document.createElement('li');
-        li.dataset.data = vencimento;
-        li.dataset.status = status;
         li.textContent = `${nome} - ${valor.toFixed(2)} - ${status} - ${vencimento}`;
+        li.dataset.vencimento = vencimento;
+        li.dataset.status = status;
+        li.dataset.valor = valor;
         li.classList.add('slide-in');
         listaContas.appendChild(li);
-        atualizarResumo();
         formConta.classList.add('form-hidden');
         document.getElementById('nome-conta').value = '';
         document.getElementById('valor-conta').value = '';
@@ -95,29 +95,37 @@ document.getElementById('salvar-conta').addEventListener('click', () => {
         document.getElementById('vencimento-conta').value = '';
         salvarNoStorage();
         enviarNotificacao("💰 Nova conta", `${nome} - ${valor.toFixed(2)} - ${status}`);
-        filtrarContas();
+        aplicarFiltroContas();
+        atualizarResumo();
     }
 });
 
-// Filtro por mês
-filtroMesContas.addEventListener('change', filtrarContas);
-function filtrarContas(){
-    const mes = filtroMesContas.value;
-    Array.from(listaContas.children).forEach(li => {
-        li.style.display = li.dataset.data.startsWith(mes) ? 'flex' : 'none';
-    });
+// Filtrar contas por mês
+filtroMesContas.addEventListener('change', () => {
+    aplicarFiltroContas();
     atualizarResumo();
+});
+
+function aplicarFiltroContas(){
+    const mesSelecionado = filtroMesContas.value; // YYYY-MM
+    Array.from(listaContas.children).forEach(li => {
+        if(!mesSelecionado || li.dataset.vencimento.startsWith(mesSelecionado)){
+            li.style.display = 'flex';
+        } else {
+            li.style.display = 'none';
+        }
+    });
 }
 
-// Atualizar resumo financeiro
+// Resumo financeiro
 function atualizarResumo(){
     let total=0, pago=0, pendente=0;
-    Array.from(listaContas.children).forEach(li => {
+    Array.from(listaContas.children).forEach(li=>{
         if(li.style.display === 'none') return;
-        const partes = li.textContent.split(' - ');
-        const valor = parseFloat(partes[1]);
+        const valor = parseFloat(li.dataset.valor);
+        const status = li.dataset.status;
         total += valor;
-        if(partes[2]==='paga') pago += valor;
+        if(status === 'paga') pago += valor;
         else pendente += valor;
     });
     totalGasto.textContent = total.toFixed(2);
@@ -125,48 +133,49 @@ function atualizarResumo(){
     totalPendente.textContent = pendente.toFixed(2);
 }
 
-/* ================== LOCALSTORAGE ================== */
+// ===================== LOCALSTORAGE =====================
 function salvarNoStorage(){
-    const lembretes = Array.from(listaLembretes.children).map(li=>({
+    const lembretesArray = Array.from(listaLembretes.children).map(li => ({
         texto: li.textContent,
-        data: li.dataset.data,
-        prioridade: li.dataset.prioridade
+        data: li.dataset.data
     }));
-    const contas = Array.from(listaContas.children).map(li=>({
+    const contasArray = Array.from(listaContas.children).map(li => ({
         texto: li.textContent,
-        data: li.dataset.data,
-        status: li.dataset.status
+        valor: li.dataset.valor,
+        status: li.dataset.status,
+        vencimento: li.dataset.vencimento
     }));
-    localStorage.setItem('lembretes', JSON.stringify(lembretes));
-    localStorage.setItem('contas', JSON.stringify(contas));
+    localStorage.setItem('lembretes', JSON.stringify(lembretesArray));
+    localStorage.setItem('contas', JSON.stringify(contasArray));
 }
 
 function carregarDoStorage(){
     const lembretesSalvos = JSON.parse(localStorage.getItem('lembretes') || '[]');
-    lembretesSalvos.forEach(obj => {
+    lembretesSalvos.forEach(item => {
         const li = document.createElement('li');
-        li.textContent = obj.texto;
-        li.dataset.data = obj.data;
-        li.dataset.prioridade = obj.prioridade;
+        li.textContent = item.texto;
+        li.dataset.data = item.data;
         li.classList.add('slide-in');
         listaLembretes.appendChild(li);
     });
     const contasSalvas = JSON.parse(localStorage.getItem('contas') || '[]');
-    contasSalvas.forEach(obj => {
+    contasSalvas.forEach(item => {
         const li = document.createElement('li');
-        li.textContent = obj.texto;
-        li.dataset.data = obj.data;
-        li.dataset.status = obj.status;
+        li.textContent = item.texto;
+        li.dataset.valor = item.valor;
+        li.dataset.status = item.status;
+        li.dataset.vencimento = item.vencimento;
         li.classList.add('slide-in');
         listaContas.appendChild(li);
     });
-    filtrarLembretes();
-    filtrarContas();
+    atualizarResumo();
+    aplicarFiltroLembretes();
+    aplicarFiltroContas();
 }
 
 window.addEventListener('load', carregarDoStorage);
 
-/* ================== NOTIFICAÇÕES ================== */
+// ===================== NOTIFICAÇÕES =====================
 function enviarNotificacao(titulo, mensagem){
     if(Notification.permission === 'granted'){
         new Notification(titulo, { body: mensagem });
