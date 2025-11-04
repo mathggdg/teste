@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>💡 Organizador Financeiro & Lembretes</title>
 <link rel="stylesheet" href="style.css">
-<link rel="manifest" href="manifest.json">
 </head>
 <body>
 
@@ -20,25 +19,28 @@
 </div>
 
 <!-- Lembretes -->
-<div id="tela-lembretes" class="tela">
-    <button id="voltar-inicial-lembretes" class="btn-voltar">⬅ Voltar</button>
+<div id="tela-lembretes" class="tela form-hidden">
+    <button class="btn-voltar" id="voltar-inicial-lembretes">⬅ Voltar</button>
     <div class="filtro">
         <label>Mês: <input type="month" id="filtro-mes-lembretes"></label>
     </div>
     <ul id="lista-lembretes"></ul>
     <button id="btn-adicionar-lembrete" class="btn-float">+</button>
-    <div id="form-lembrete" class="form-centralizado" style="display:none">
+    <div id="form-lembrete" class="form-hidden form-centralizado">
         <input type="text" id="titulo-lembrete" placeholder="Título">
         <textarea id="descricao-lembrete" placeholder="Descrição"></textarea>
         <input type="date" id="data-lembrete">
-        <button id="salvar-lembrete">Salvar</button>
-        <button id="cancelar-lembrete">Cancelar</button>
+        <input type="time" id="hora-lembrete" placeholder="Hora (opcional)">
+        <div class="form-buttons">
+            <button id="salvar-lembrete">Salvar</button>
+            <button id="cancelar-lembrete">Cancelar</button>
+        </div>
     </div>
 </div>
 
 <!-- Contas -->
-<div id="tela-contas" class="tela">
-    <button id="voltar-inicial-contas" class="btn-voltar">⬅ Voltar</button>
+<div id="tela-contas" class="tela form-hidden">
+    <button class="btn-voltar" id="voltar-inicial-contas">⬅ Voltar</button>
     <div class="filtro">
         <label>Mês: <input type="month" id="filtro-mes-contas"></label>
     </div>
@@ -58,16 +60,18 @@
     </div>
     <ul id="lista-contas"></ul>
     <button id="btn-adicionar-conta" class="btn-float">+</button>
-    <div id="form-conta" class="form-centralizado" style="display:none">
+    <div id="form-conta" class="form-hidden form-centralizado">
         <input type="text" id="nome-conta" placeholder="Nome da conta">
         <input type="number" id="valor-conta" placeholder="Valor">
         <input type="date" id="vencimento-conta">
         <select id="status-conta">
-            <option value="nao-paga">⏳ Não Paga</option>
-            <option value="paga">✅ Paga</option>
+            <option value="nao-paga">Não Paga</option>
+            <option value="paga">Paga</option>
         </select>
-        <button id="salvar-conta">Salvar</button>
-        <button id="cancelar-conta">Cancelar</button>
+        <div class="form-buttons">
+            <button id="salvar-conta">Salvar</button>
+            <button id="cancelar-conta">Cancelar</button>
+        </div>
     </div>
 </div>
 

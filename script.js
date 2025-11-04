@@ -1,58 +1,47 @@
-// Elementos
+// Telas
 const telaInicial = document.getElementById('tela-inicial');
 const telaLembretes = document.getElementById('tela-lembretes');
 const telaContas = document.getElementById('tela-contas');
 
-// Abrir telas
-document.getElementById('opcao-lembretes').addEventListener('click', () => {
+function abrirTela(telaEscolhida){
     telaInicial.style.display = 'none';
-    telaLembretes.style.display = 'block';
-});
-
-document.getElementById('opcao-contas').addEventListener('click', () => {
-    telaInicial.style.display = 'none';
-    telaContas.style.display = 'block';
-});
-
-// Botões voltar
-document.getElementById('voltar-inicial-lembretes').addEventListener('click', () => {
     telaLembretes.style.display = 'none';
-    telaInicial.style.display = 'flex';
-});
-document.getElementById('voltar-inicial-contas').addEventListener('click', () => {
     telaContas.style.display = 'none';
-    telaInicial.style.display = 'flex';
-});
+    telaEscolhida.style.display = 'block';
+}
+
+document.getElementById('opcao-lembretes').addEventListener('click', () => abrirTela(telaLembretes));
+document.getElementById('opcao-contas').addEventListener('click', () => abrirTela(telaContas));
+
+document.getElementById('voltar-inicial-lembretes').addEventListener('click', () => abrirTela(telaInicial));
+document.getElementById('voltar-inicial-contas').addEventListener('click', () => abrirTela(telaInicial));
 
 // Lembretes
 const listaLembretes = document.getElementById('lista-lembretes');
 const formLembrete = document.getElementById('form-lembrete');
-document.getElementById('btn-adicionar-lembrete').addEventListener('click', () => formLembrete.style.display='block');
-document.getElementById('cancelar-lembrete').addEventListener('click', () => formLembrete.style.display='none');
 
+document.getElementById('btn-adicionar-lembrete').addEventListener('click', () => formLembrete.classList.remove('form-hidden'));
+document.getElementById('cancelar-lembrete').addEventListener('click', () => formLembrete.classList.add('form-hidden'));
 document.getElementById('salvar-lembrete').addEventListener('click', () => {
     const titulo = document.getElementById('titulo-lembrete').value.trim();
     const desc = document.getElementById('descricao-lembrete').value.trim();
     const data = document.getElementById('data-lembrete').value;
+    const hora = document.getElementById('hora-lembrete').value;
     if(titulo && desc && data){
-        const li = document.createElement('li');
-        li.innerHTML = `${titulo} - ${desc} - ${data} <span class="status-btn">❌ Não realizado</span>`;
-        listaLembretes.appendChild(li);
-
-        // Toggle status
-        li.querySelector('.status-btn').addEventListener('click', function(){
-            if(this.textContent.includes('❌')){
-                this.textContent = '✅ Realizado';
-            } else {
-                this.textContent = '❌ Não realizado';
-            }
-            salvarNoStorage();
+        let li = document.createElement('li');
+        li.textContent = hora ? `${titulo} - ${desc} - ${data} ${hora}` : `${titulo} - ${desc} - ${data}`;
+        li.classList.add('slide-in');
+        li.dataset.realizado = 'nao';
+        li.addEventListener('click', () => {
+            li.dataset.realizado = li.dataset.realizado === 'nao' ? 'sim' : 'nao';
+            li.style.textDecoration = li.dataset.realizado === 'sim' ? 'line-through' : 'none';
         });
-
-        formLembrete.style.display='none';
-        document.getElementById('titulo-lembrete').value='';
-        document.getElementById('descricao-lembrete').value='';
-        document.getElementById('data-lembrete').value='';
+        listaLembretes.appendChild(li);
+        formLembrete.classList.add('form-hidden');
+        document.getElementById('titulo-lembrete').value = '';
+        document.getElementById('descricao-lembrete').value = '';
+        document.getElementById('data-lembrete').value = '';
+        document.getElementById('hora-lembrete').value = '';
         salvarNoStorage();
     }
 });
@@ -64,36 +53,31 @@ const totalGasto = document.getElementById('total-gasto');
 const totalPago = document.getElementById('total-pago');
 const totalPendente = document.getElementById('total-pendente');
 
-document.getElementById('btn-adicionar-conta').addEventListener('click', () => formConta.style.display='block');
-document.getElementById('cancelar-conta').addEventListener('click', () => formConta.style.display='none');
-
+document.getElementById('btn-adicionar-conta').addEventListener('click', () => formConta.classList.remove('form-hidden'));
+document.getElementById('cancelar-conta').addEventListener('click', () => formConta.classList.add('form-hidden'));
 document.getElementById('salvar-conta').addEventListener('click', () => {
     const nome = document.getElementById('nome-conta').value.trim();
     const valor = parseFloat(document.getElementById('valor-conta').value);
     const status = document.getElementById('status-conta').value;
     const vencimento = document.getElementById('vencimento-conta').value;
     if(nome && valor && vencimento){
-        const li = document.createElement('li');
-        li.innerHTML = `${nome} - R$${valor.toFixed(2)} - <span class="status-btn">${status==='paga'?'✅ Paga':'⏳ Não Paga'}</span> - ${vencimento}`;
-        listaContas.appendChild(li);
-
-        // Toggle status
-        li.querySelector('.status-btn').addEventListener('click', function(){
-            if(this.textContent.includes('⏳')){
-                this.textContent = '✅ Paga';
-            } else {
-                this.textContent = '⏳ Não Paga';
-            }
+        let li = document.createElement('li');
+        li.textContent = `${nome} - ${valor.toFixed(2)} - ${status} - ${vencimento}`;
+        li.dataset.status = status;
+        li.classList.add('slide-in');
+        li.addEventListener('click', () => {
+            li.dataset.status = li.dataset.status === 'paga' ? 'nao-paga' : 'paga';
+            li.textContent = `${nome} - ${valor.toFixed(2)} - ${li.dataset.status} - ${vencimento}`;
             atualizarResumo();
             salvarNoStorage();
         });
-
-        formConta.style.display='none';
-        document.getElementById('nome-conta').value='';
-        document.getElementById('valor-conta').value='';
-        document.getElementById('status-conta').value='nao-paga';
-        document.getElementById('vencimento-conta').value='';
+        listaContas.appendChild(li);
         atualizarResumo();
+        formConta.classList.add('form-hidden');
+        document.getElementById('nome-conta').value = '';
+        document.getElementById('valor-conta').value = '';
+        document.getElementById('status-conta').value = 'nao-paga';
+        document.getElementById('vencimento-conta').value = '';
         salvarNoStorage();
     }
 });
@@ -103,49 +87,61 @@ function atualizarResumo(){
     let total=0, pago=0, pendente=0;
     Array.from(listaContas.children).forEach(li=>{
         const partes = li.textContent.split(' - ');
-        const valor = parseFloat(partes[1].replace('R$',''));
-        total+=valor;
-        if(partes[2].includes('✅')) pago+=valor;
-        else pendente+=valor;
+        const valor = parseFloat(partes[1]);
+        total += valor;
+        if(li.dataset.status === 'paga') pago += valor;
+        else pendente += valor;
     });
-    totalGasto.textContent = `R$${total.toFixed(2)}`;
-    totalPago.textContent = `R$${pago.toFixed(2)}`;
-    totalPendente.textContent = `R$${pendente.toFixed(2)}`;
+    totalGasto.textContent = total.toFixed(2);
+    totalPago.textContent = pago.toFixed(2);
+    totalPendente.textContent = pendente.toFixed(2);
 }
 
-// LocalStorage
+// Storage
 function salvarNoStorage(){
-    const lembretes = Array.from(listaLembretes.children).map(li=>li.innerHTML);
-    const contas = Array.from(listaContas.children).map(li=>li.innerHTML);
+    const lembretes = Array.from(listaLembretes.children).map(li=>({
+        texto: li.textContent,
+        realizado: li.dataset.realizado
+    }));
+    const contas = Array.from(listaContas.children).map(li=>({
+        texto: li.textContent,
+        status: li.dataset.status
+    }));
     localStorage.setItem('lembretes', JSON.stringify(lembretes));
     localStorage.setItem('contas', JSON.stringify(contas));
 }
 
 function carregarDoStorage(){
-    const lembretesSalvos = JSON.parse(localStorage.getItem('lembretes')||'[]');
-    lembretesSalvos.forEach(html=>{
-        const li = document.createElement('li'); li.innerHTML=html;
-        listaLembretes.appendChild(li);
-        li.querySelector('.status-btn').addEventListener('click', function(){
-            if(this.textContent.includes('❌')){
-                this.textContent='✅ Realizado';
-            } else { this.textContent='❌ Não realizado'; }
-            salvarNoStorage();
+    const lembretesSalvos = JSON.parse(localStorage.getItem('lembretes') || '[]');
+    lembretesSalvos.forEach(obj=>{
+        const li = document.createElement('li');
+        li.textContent = obj.texto;
+        li.dataset.realizado = obj.realizado || 'nao';
+        if(li.dataset.realizado === 'sim') li.style.textDecoration = 'line-through';
+        li.addEventListener('click', () => {
+            li.dataset.realizado = li.dataset.realizado === 'nao' ? 'sim' : 'nao';
+            li.style.textDecoration = li.dataset.realizado === 'sim' ? 'line-through' : 'none';
         });
+        listaLembretes.appendChild(li);
     });
-    const contasSalvas = JSON.parse(localStorage.getItem('contas')||'[]');
-    contasSalvas.forEach(html=>{
-        const li=document.createElement('li'); li.innerHTML=html;
-        listaContas.appendChild(li);
-        li.querySelector('.status-btn').addEventListener('click', function(){
-            if(this.textContent.includes('⏳')){
-                this.textContent='✅ Paga';
-            } else { this.textContent='⏳ Não Paga'; }
+
+    const contasSalvas = JSON.parse(localStorage.getItem('contas') || '[]');
+    contasSalvas.forEach(obj=>{
+        const li = document.createElement('li');
+        li.textContent = obj.texto;
+        li.dataset.status = obj.status || 'nao-paga';
+        li.addEventListener('click', () => {
+            const partes = li.textContent.split(' - ');
+            li.dataset.status = li.dataset.status === 'paga' ? 'nao-paga' : 'paga';
+            li.textContent = `${partes[0]} - ${parseFloat(partes[1]).toFixed(2)} - ${li.dataset.status} - ${partes[3]}`;
             atualizarResumo();
             salvarNoStorage();
         });
+        listaContas.appendChild(li);
     });
+
     atualizarResumo();
 }
 
 window.addEventListener('load', carregarDoStorage);
+git 
