@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💡 Organizador Financeiro & Lembretes</title>
+<title>💡 Organizador</title>
 <link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
 </head>
 <body>
 
@@ -20,7 +21,7 @@
 
 <!-- Lembretes -->
 <div id="tela-lembretes" class="tela form-hidden">
-    <button class="btn-voltar" id="voltar-inicial-lembretes">⬅ Voltar</button>
+    <button class="voltar-menu" id="voltar-lembretes">⬅ Voltar</button>
     <div class="filtro">
         <label>Mês: <input type="month" id="filtro-mes-lembretes"></label>
     </div>
@@ -31,30 +32,32 @@
         <textarea id="descricao-lembrete" placeholder="Descrição"></textarea>
         <input type="date" id="data-lembrete">
         <input type="time" id="hora-lembrete" placeholder="Hora (opcional)">
-        <div class="form-buttons">
-            <button id="salvar-lembrete">Salvar</button>
-            <button id="cancelar-lembrete">Cancelar</button>
-        </div>
+        <select id="status-lembrete">
+            <option value="nao-realizado">Não realizado</option>
+            <option value="realizado">Realizado</option>
+        </select>
+        <button id="salvar-lembrete">Salvar</button>
+        <button id="cancelar-lembrete">Cancelar</button>
     </div>
 </div>
 
 <!-- Contas -->
 <div id="tela-contas" class="tela form-hidden">
-    <button class="btn-voltar" id="voltar-inicial-contas">⬅ Voltar</button>
+    <button class="voltar-menu" id="voltar-contas">⬅ Voltar</button>
     <div class="filtro">
         <label>Mês: <input type="month" id="filtro-mes-contas"></label>
     </div>
     <div class="resumo">
         <div class="resumo-card total-gasto">
-            <p>Total gasto</p>
+            <p>Total</p>
             <span id="total-gasto">0</span>
         </div>
         <div class="resumo-card total-pago">
-            <p>Total pago</p>
+            <p>Pagas</p>
             <span id="total-pago">0</span>
         </div>
         <div class="resumo-card total-pendente">
-            <p>Total pendente</p>
+            <p>Não pagas</p>
             <span id="total-pendente">0</span>
         </div>
     </div>
@@ -68,10 +71,8 @@
             <option value="nao-paga">Não Paga</option>
             <option value="paga">Paga</option>
         </select>
-        <div class="form-buttons">
-            <button id="salvar-conta">Salvar</button>
-            <button id="cancelar-conta">Cancelar</button>
-        </div>
+        <button id="salvar-conta">Salvar</button>
+        <button id="cancelar-conta">Cancelar</button>
     </div>
 </div>
 
