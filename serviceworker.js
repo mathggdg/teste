@@ -7,19 +7,12 @@ const urlsToCache = [
     './manifest.json'
 ];
 
-// Instalando cache
-self.addEventListener('install', e => {
-    e.waitUntil(
-        caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
-    );
+self.addEventListener('install', event => {
+    event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache)));
 });
 
-// Ativando
-self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
 
-// Fetch
-self.addEventListener('fetch', e => {
-    e.respondWith(
-        caches.match(e.request).then(res => res || fetch(e.request))
-    );
+self.addEventListener('fetch', event => {
+    event.respondWith(caches.match(event.request).then(res => res || fetch(event.request)));
 });
