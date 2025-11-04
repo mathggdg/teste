@@ -2,16 +2,16 @@
     --bg-color: #f0f2f5;
     --text-color: #333;
     --card-bg: #fff;
-    --primary: #007BFF;
-    --secondary: #0056b3;
+    --primary: #1E88E5; /* azul */
+    --secondary: #1565C0;
 }
 
 body.dark {
     --bg-color: #121212;
     --text-color: #eee;
     --card-bg: #1e1e1e;
-    --primary: #3399FF;
-    --secondary: #003366;
+    --primary: #90CAF9;
+    --secondary: #42A5F5;
 }
 
 body {
@@ -49,9 +49,8 @@ body {
 
 .opcoes-iniciais button:hover { transform: scale(1.05); }
 
-/* Telas */
 .tela { opacity: 1; transition: opacity 0.4s, transform 0.4s; }
-.tela.form-hidden { display: none; opacity: 0; pointer-events: none; }
+.tela.form-hidden { opacity: 0; transform: translateY(20px); pointer-events: none; }
 
 li { 
     background-color: var(--card-bg);
@@ -88,19 +87,15 @@ button:hover { transform: scale(1.05); }
     box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
 }
 
-#btn-adicionar-lembrete { bottom: 20px; }
-#btn-adicionar-conta { bottom: 100px; }
-
 .btn-voltar {
-    margin: 10px;
     padding: 10px 15px;
+    margin: 10px;
     background-color: var(--secondary);
     color: white;
-    border-radius: 8px;
+    font-weight: bold;
+    border-radius: 10px;
     cursor: pointer;
 }
-
-.btn-voltar:hover { transform: scale(1.05); }
 
 @media(max-width:480px){
     .resumo { flex-direction: column; }
