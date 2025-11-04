@@ -1,19 +1,9 @@
 :root {
-    --bg-color: #f9f9f9;
-    --text-color: #333;
-    --card-bg: #fff;
-    --primary: #007BFF;
-    --secondary: #0056b3;
-    --accent: #FFC107;
-}
-
-body.dark {
-    --bg-color: #121212;
-    --text-color: #eee;
-    --card-bg: #1e1e1e;
-    --primary: #0d6efd;
-    --secondary: #0b5ed7;
-    --accent: #ffc107;
+    --bg-color: #f5f5f7;
+    --text-color: #222;
+    --card-bg: #ffffff;
+    --primary: #ff6f61;
+    --secondary: #ff9472;
 }
 
 body {
@@ -24,7 +14,7 @@ body {
     padding: 0;
 }
 
-/* Tela inicial */
+/* Tela Inicial */
 .tela-inicial {
     display: flex;
     flex-direction: column;
@@ -39,82 +29,145 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 60%;
+    width: 70%;
 }
 
 .opcoes-iniciais button {
-    padding: 25px 30px;
-    font-size: 1.8rem;
+    padding: 20px;
+    font-size: 1.5rem;
     border-radius: 20px;
     border: none;
     cursor: pointer;
     font-weight: bold;
     background-color: var(--primary);
     color: white;
-    transition: transform 0.3s;
+    transition: transform 0.3s, background-color 0.3s;
 }
 
 .opcoes-iniciais button:hover {
     transform: scale(1.05);
+    background-color: var(--secondary);
 }
 
 /* Telas */
-.tela { opacity: 1; transition: opacity 0.4s, transform 0.4s; }
-.tela.form-hidden { opacity: 0; transform: translateY(20px); pointer-events: none; }
+.tela {
+    padding: 20px;
+}
+
+.form-hidden {
+    display: none !important;
+}
+
+.form-centralizado {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+input, textarea, select, button {
+    margin-bottom: 10px;
+    border-radius: 8px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    width: 100%;
+    font-size: 1rem;
+}
+
+button {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background-color: var(--secondary);
+}
 
 /* Lista */
-li { 
+li {
     background-color: var(--card-bg);
-    margin-bottom: 14px;
-    padding: 16px;
-    border-radius: 14px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    margin-bottom: 12px;
+    padding: 14px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-weight: bold;
-    cursor: pointer;
+    flex-wrap: wrap;
 }
 
-li.realizado { background-color: #d1e7dd; color: #0f5132; }
-li.nao-realizado { background-color: #f8d7da; color: #842029; }
-
-li.slide-in { animation: slideIn 0.5s forwards; }
-@keyframes slideIn { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
-
-/* Formulários */
-.form-hidden { display: none; }
-.form-centralizado { 
-    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    background-color: var(--card-bg); padding: 20px; border-radius: 14px; width: 90%; max-width: 400px; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+/* Animação de entrada */
+li.slide-in {
+    animation: slideIn 0.4s forwards;
 }
 
-input, textarea, select, button { margin-bottom: 10px; border-radius: 8px; padding: 8px; border: 1px solid #ccc; width: 100%; }
-button { border: none; background-color: var(--primary); color: white; cursor: pointer; font-weight: bold; transition: 0.2s; }
-button:hover { transform: scale(1.05); }
+@keyframes slideIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
 
-.resumo { display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 12px; }
-.resumo-card { flex: 1; min-width: 100px; margin: 5px; background-color: var(--card-bg); padding: 12px; border-radius: 12px; text-align: center; font-weight: bold; }
-
+/* Botões flutuantes */
 .btn-float {
-    position: fixed; right: 20px; width: 60px; height: 60px; border-radius: 50%; font-size: 2rem;
-    color: white; background-color: var(--accent); display: flex; justify-content: center; align-items: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.btn-voltar {
-    padding: 10px 16px;
-    margin: 10px;
-    background-color: var(--secondary);
+    position: fixed;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 2rem;
     color: white;
-    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     cursor: pointer;
+    z-index: 5;
 }
 
+#btn-adicionar-lembrete { bottom: 20px; }
+#btn-adicionar-conta { bottom: 100px; }
+
+/* Resumo financeiro */
+.resumo {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.resumo-card {
+    flex: 1;
+    min-width: 100px;
+    margin: 5px;
+    background-color: var(--card-bg);
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Botão voltar */
+.btn-voltar {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    background-color: #999;
+}
+
+/* Responsivo */
 @media(max-width:480px){
-    .resumo { flex-direction: column; }
-    li { flex-direction: column; align-items: flex-start; }
     .opcoes-iniciais { width: 90%; }
-    .btn-float { width: 50px; height: 50px; font-size: 1.5rem; }
+    li { flex-direction: column; align-items: flex-start; }
+    .resumo { flex-direction: column; }
 }
